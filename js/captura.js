@@ -2,7 +2,9 @@ document
   .getElementById("btn-captura")
   .addEventListener("click", async function () {
     const btn = this;
+    const grain = document.querySelector(".grain");
     btn.style.display = "none";
+    if (grain) grain.style.display = "none";
 
     try {
       const secciones = document.querySelectorAll("main > section");
@@ -13,6 +15,7 @@ document
       const margen = 10;
       const areaAncho = paginaAncho - margen * 2;
       const areaAlto = paginaAlto - margen * 2;
+      const fondo = "#0a0a0a";
 
       let pdf = null;
 
@@ -21,7 +24,7 @@ document
         const canvas = await html2canvas(seccion, {
           scale: 2,
           useCORS: true,
-          backgroundColor: "#f4ede4",
+          backgroundColor: null,
         });
 
         const imgData = canvas.toDataURL("image/jpeg", 0.95);
@@ -44,7 +47,7 @@ document
           pdf.addPage("a4", "p");
         }
 
-        pdf.setFillColor("#f4ede4");
+        pdf.setFillColor(fondo);
         pdf.rect(0, 0, paginaAncho, paginaAlto, "F");
         pdf.addImage(imgData, "JPEG", x, y, imgW, imgH);
       }
@@ -55,5 +58,6 @@ document
       alert("No se pudo generar el PDF.");
     } finally {
       btn.style.display = "";
+      if (grain) grain.style.display = "";
     }
   });
