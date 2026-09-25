@@ -838,7 +838,8 @@ strong {
 
 .actividad-media--ig .actividad-plataforma {
   z-index: 5;
-  top: 14px;
+  top: auto;
+  bottom: 14px;
   left: 14px;
   pointer-events: none;
 }
