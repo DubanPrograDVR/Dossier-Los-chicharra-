@@ -1,0 +1,1284 @@
+/* ============================================================
+   Los Chicharra — Rock Chicharra
+   Estética: afiche serigrafiado / garage-punk
+   Paleta base heredada: papel crema + negro + tinta azul
+   ============================================================ */
+
+:root {
+  --paper: #efe5d7;
+  --paper-2: #f4ede4;
+  --paper-3: #e6dac9;
+  --ink: #121212;
+  --black: #0a0a0a;
+  --black-2: #111418;
+  --blue: #2b82c7;
+  --blue-strong: #0d629d;
+  --blue-deep: #064a7a;
+  --white: #ffffff;
+  --muted: #5a554e;
+  --muted-light: rgba(255, 255, 255, 0.72);
+
+  /* Font families are provided by next/font as CSS variables */
+  --font-display: var(--font-anton), "Figtree", sans-serif;
+  --font-body: var(--font-figtree), sans-serif;
+
+  --wrap: min(1180px, calc(100% - 48px));
+  --border-ink: 2px solid var(--ink);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--black);
+}
+
+body {
+  position: relative;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--paper);
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: var(--blue);
+  color: var(--white);
+}
+
+/* ── Grano / textura global ── */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Utilidades tipográficas ── */
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--blue-strong);
+}
+
+.etiqueta::before {
+  content: "";
+  width: 34px;
+  height: 3px;
+  background: var(--blue);
+}
+
+.etiqueta--blue {
+  color: var(--blue);
+}
+
+.etiqueta--blue::before {
+  background: var(--blue);
+}
+
+.titulo {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  line-height: 0.95;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.titulo--light {
+  color: var(--paper-2);
+}
+
+.ink-blue {
+  color: var(--blue);
+}
+
+strong {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.titulo--light strong,
+.musica-lead strong {
+  color: var(--white);
+}
+
+/* ── Header / nav ── */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--black);
+  border-bottom: 3px solid var(--blue);
+  padding: 12px 24px;
+}
+
+.navbar {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.logo-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo {
+  width: 66px;
+  height: auto;
+}
+
+.menu-toggle {
+  display: none;
+  margin-left: auto;
+  width: 50px;
+  height: 50px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 2px solid var(--blue);
+  background: transparent;
+  color: var(--white);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.menu-toggle:hover {
+  background: rgba(43, 130, 199, 0.2);
+}
+
+.menu-toggle-line {
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.elementos-navbar {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+
+.elements {
+  position: relative;
+  text-decoration: none;
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 0;
+  transition: color 0.2s ease;
+}
+
+.elements::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.elements:hover,
+.elements.is-current {
+  color: var(--blue);
+}
+
+.elements:hover::after,
+.elements.is-current::after {
+  transform: scaleX(1);
+}
+
+/* ============================================================
+   HERO
+   Fix: sección a todo el ancho con fondo negro; el contenido
+   vive en un contenedor interno centrado (antes se veía una
+   franja crema del body a los costados en pantallas anchas).
+   ============================================================ */
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--black);
+  color: var(--paper-2);
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 3;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(48px, 9vw, 110px) 24px clamp(56px, 9vw, 120px);
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: center;
+  gap: clamp(32px, 5vw, 72px);
+}
+
+.hero-noise {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 78% 30%, rgba(43, 130, 199, 0.28), transparent 42%),
+    radial-gradient(circle at 12% 82%, rgba(13, 98, 157, 0.22), transparent 46%);
+  pointer-events: none;
+}
+
+.bolt {
+  position: absolute;
+  color: var(--blue);
+  opacity: 0.5;
+  z-index: 1;
+  animation: floaty 6s ease-in-out infinite;
+}
+
+.bolt--1 {
+  top: 12%;
+  left: 6%;
+  font-size: 2.6rem;
+  transform: rotate(-12deg);
+}
+
+.bolt--2 {
+  top: 22%;
+  right: 8%;
+  font-size: 2rem;
+  animation-delay: 1.2s;
+}
+
+.bolt--3 {
+  bottom: 14%;
+  left: 46%;
+  font-size: 1.8rem;
+  transform: rotate(14deg);
+  animation-delay: 2.4s;
+}
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(-12deg); }
+  50% { transform: translateY(-12px) rotate(-4deg); }
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 3;
+}
+
+.hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--blue);
+  border: 2px solid rgba(43, 130, 199, 0.5);
+  padding: 8px 16px;
+  margin-bottom: 26px;
+}
+
+.tick {
+  width: 8px;
+  height: 8px;
+  background: var(--blue);
+  border-radius: 50%;
+  animation: blink 1.6s steps(2) infinite;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.2; }
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.82;
+  letter-spacing: 0.005em;
+  margin-bottom: 22px;
+}
+
+.hero-line {
+  display: block;
+  font-size: clamp(4.2rem, 15vw, 10rem);
+  color: var(--blue);
+}
+
+.hero-line--stroke {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--blue);
+  text-stroke: 2px var(--blue);
+}
+
+.hero-genre {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+  letter-spacing: 0.2em;
+  color: var(--paper-2);
+  background: var(--blue-strong);
+  display: inline-block;
+  padding: 6px 16px;
+  transform: rotate(-1.5deg);
+  margin-bottom: 22px;
+}
+
+.hero-phrase {
+  max-width: 40ch;
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--muted-light);
+  margin-bottom: 32px;
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+/* ── Botones ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  font-family: var(--font-body);
+  font-weight: 800;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 2px solid var(--blue);
+  cursor: pointer;
+  transition: transform 0.18s ease, background-color 0.2s ease, color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.btn--blue {
+  background: var(--blue);
+  color: var(--white);
+  box-shadow: 4px 4px 0 var(--blue-deep);
+}
+
+.btn--blue:hover {
+  background: var(--blue-strong);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--blue-deep);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--paper-2);
+}
+
+.btn--ghost:hover {
+  background: var(--blue);
+  color: var(--white);
+  transform: translate(-2px, -2px);
+}
+
+.hero-logo {
+  position: relative;
+  z-index: 3;
+  width: min(100%, 420px);
+  height: auto;
+  justify-self: center;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+  animation: sway 8s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
+}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
+.marquee {
+  background: var(--blue);
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+  overflow: hidden;
+  padding: 12px 0;
+}
+
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  white-space: nowrap;
+  animation: scroll-x 26s linear infinite;
+}
+
+.marquee-track span {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  color: var(--white);
+}
+
+.marquee-track .dot {
+  color: var(--black);
+  font-size: 0.9rem;
+}
+
+@keyframes scroll-x {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   BANDA / INTEGRANTES
+   ============================================================ */
+.banda {
+  width: var(--wrap);
+  margin: clamp(64px, 9vw, 120px) auto;
+}
+
+.banda-intro {
+  max-width: 760px;
+  margin-bottom: clamp(36px, 5vw, 60px);
+}
+
+.banda-intro .titulo {
+  margin: 16px 0 20px;
+}
+
+.banda-lead {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.integrantes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.integrante {
+  background: var(--black);
+  border: var(--border-ink);
+  box-shadow: 6px 6px 0 var(--blue);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.integrante:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--blue-strong);
+}
+
+.integrante-foto {
+  position: relative;
+  overflow: hidden;
+  border-bottom: var(--border-ink);
+}
+
+.integrante-foto img {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: contrast(1.05) saturate(1.08);
+  transition: transform 0.4s ease;
+}
+
+.integrante:hover .integrante-foto img {
+  transform: scale(1.05);
+}
+
+.integrante-num {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--blue);
+  text-shadow: 2px 2px 0 var(--black);
+}
+
+.integrante-info {
+  padding: 22px 22px 26px;
+}
+
+.rol-tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--blue);
+  padding: 5px 12px;
+  margin-bottom: 14px;
+}
+
+.integrante-nombre {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: 2rem;
+  color: var(--paper-2);
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+
+.integrante-texto {
+  color: var(--muted-light);
+  line-height: 1.7;
+  font-size: 0.98rem;
+}
+
+/* ============================================================
+   MÚSICA
+   ============================================================ */
+.musica {
+  position: relative;
+  background: var(--black);
+  color: var(--paper-2);
+  border-top: 3px solid var(--blue);
+  border-bottom: 3px solid var(--blue);
+  padding: clamp(64px, 9vw, 120px) 0;
+  overflow: hidden;
+}
+
+.musica-noise,
+.redes-noise {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(43, 130, 199, 0.22), transparent 40%),
+    radial-gradient(circle at 5% 90%, rgba(13, 98, 157, 0.2), transparent 44%);
+  pointer-events: none;
+}
+
+.musica-inner {
+  position: relative;
+  z-index: 2;
+  width: var(--wrap);
+  margin: 0 auto;
+}
+
+.musica-encabezado {
+  max-width: 780px;
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
+.musica-encabezado .titulo {
+  margin: 16px 0 20px;
+}
+
+.musica-lead {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: var(--muted-light);
+}
+
+.musica-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.disco-card {
+  border: 2px solid rgba(43, 130, 199, 0.55);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 26px;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.disco-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-4px);
+}
+
+.disco-head {
+  margin-bottom: 22px;
+}
+
+.disco-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--blue);
+  padding: 5px 12px;
+  transform: rotate(-1.5deg);
+  margin-bottom: 16px;
+}
+
+.disco-nombre {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  color: var(--blue);
+  letter-spacing: 0.03em;
+  margin-bottom: 12px;
+}
+
+.disco-texto {
+  color: var(--muted-light);
+  line-height: 1.7;
+}
+
+.spotify-frame {
+  border: 2px solid rgba(43, 130, 199, 0.4);
+}
+
+.spotify-frame iframe {
+  display: block;
+  width: 100%;
+}
+
+.musica-nota {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 32px;
+  font-size: 1rem;
+  color: var(--paper-2);
+  font-style: italic;
+}
+
+.musica-nota i {
+  color: var(--blue);
+  font-size: 1.3rem;
+}
+
+/* ============================================================
+   IDENTIDAD / ROCK CHICHARRA
+   ============================================================ */
+.identidad {
+  width: var(--wrap);
+  margin: clamp(64px, 9vw, 120px) auto;
+}
+
+.identidad-inner {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+}
+
+.identidad-titulo {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  line-height: 0.92;
+  margin: 16px 0 24px;
+}
+
+.identidad-texto {
+  max-width: 52ch;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.genero-list {
+  list-style: none;
+  background: var(--black);
+  border: var(--border-ink);
+  box-shadow: 8px 8px 0 var(--blue);
+  padding: 12px 26px;
+}
+
+.genero-item {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+  letter-spacing: 0.03em;
+  color: var(--paper-2);
+  padding: 14px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.18);
+}
+
+.genero-item:last-child {
+  border-bottom: none;
+}
+
+.genero-num {
+  color: var(--blue);
+  font-size: 1.4rem;
+}
+
+.genero-item--total {
+  color: var(--blue);
+}
+
+/* ============================================================
+   ACTIVIDADES / REDES SOCIALES
+   Sección nueva: previews de contenido publicado.
+   Mantiene la estética de tarjetas negras con sombra azul.
+   ============================================================ */
+.actividades {
+  width: var(--wrap);
+  margin: clamp(64px, 9vw, 120px) auto;
+}
+
+.actividades-intro {
+  max-width: 760px;
+  margin-bottom: clamp(36px, 5vw, 56px);
+}
+
+.actividades-intro .titulo {
+  margin: 16px 0 20px;
+}
+
+.actividades-lead {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.actividades-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.actividad {
+  display: flex;
+  flex-direction: column;
+  background: var(--black);
+  border: var(--border-ink);
+  box-shadow: 6px 6px 0 var(--blue);
+  color: var(--paper-2);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.actividad:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--blue-strong);
+}
+
+.actividad-media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-bottom: var(--border-ink);
+  background: var(--black-2);
+}
+
+.actividad-media--wide {
+  aspect-ratio: 16 / 9;
+}
+
+.actividad-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.actividad:hover .actividad-media img {
+  transform: scale(1.05);
+}
+
+/* Preview visual estático para Instagram (sin fabricar contenido) */
+.actividad-media--ig {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 70% 20%, rgba(43, 130, 199, 0.35), transparent 55%),
+    radial-gradient(circle at 20% 85%, rgba(13, 98, 157, 0.3), transparent 55%),
+    var(--black);
+}
+
+.actividad-media--ig .ig-preview-mark {
+  font-size: 3.4rem;
+  color: var(--blue);
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+}
+
+.actividad-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 10, 10, 0.28);
+  transition: background-color 0.2s ease;
+}
+
+.actividad:hover .actividad-play {
+  background: rgba(10, 10, 10, 0.12);
+}
+
+.actividad-play span {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+  font-size: 1.4rem;
+  border: 2px solid var(--white);
+  box-shadow: 4px 4px 0 var(--blue-deep);
+  transition: transform 0.2s ease;
+}
+
+.actividad:hover .actividad-play span {
+  transform: scale(1.08);
+}
+
+.actividad-plataforma {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--blue);
+  padding: 5px 12px;
+}
+
+.actividad-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 22px 24px;
+  flex: 1;
+}
+
+.actividad-titulo {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  letter-spacing: 0.02em;
+  color: var(--paper-2);
+}
+
+.actividad-texto {
+  color: var(--muted-light);
+  line-height: 1.65;
+  font-size: 0.95rem;
+}
+
+.actividad-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 6px;
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.actividad:hover .actividad-link {
+  color: var(--white);
+}
+
+/* ============================================================
+   REDES / SIGUE EL RUIDO
+   ============================================================ */
+.redes {
+  position: relative;
+  overflow: hidden;
+  background: var(--black);
+  color: var(--paper-2);
+  border-top: 3px solid var(--blue);
+  padding: clamp(64px, 9vw, 120px) 0;
+}
+
+.redes-inner {
+  position: relative;
+  z-index: 2;
+  width: var(--wrap);
+  margin: 0 auto;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+}
+
+.redes-titulo {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  line-height: 0.95;
+  margin: 16px 0 18px;
+  max-width: 18ch;
+}
+
+.redes-lead {
+  max-width: 52ch;
+  font-size: 1.1rem;
+  line-height: 1.75;
+  color: var(--muted-light);
+  margin-bottom: 36px;
+}
+
+.ig-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  text-decoration: none;
+  background: var(--blue);
+  color: var(--white);
+  border: var(--border-ink);
+  box-shadow: 6px 6px 0 var(--paper-2);
+  padding: 20px 28px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ig-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 9px 9px 0 var(--paper-2);
+}
+
+.ig-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+}
+
+.ig-copy {
+  display: grid;
+  text-align: left;
+}
+
+.ig-handle {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: 0.02em;
+}
+
+.ig-sub {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.ig-arrow {
+  font-size: 1.2rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  background: var(--black);
+  color: var(--paper-2);
+  border-top: 3px solid var(--blue);
+}
+
+.footer-inner {
+  width: var(--wrap);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 44px 0 32px;
+}
+
+.footer-logo {
+  width: 96px;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 1rem;
+  color: var(--blue);
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-nav a {
+  color: var(--paper-2);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.footer-nav a:hover {
+  color: var(--blue);
+}
+
+.footer-socials {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-social {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--blue);
+  color: var(--paper-2);
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-social:hover {
+  background: var(--blue);
+  color: var(--white);
+  transform: translateY(-3px);
+}
+
+.footer-bottom {
+  width: var(--wrap);
+  margin: 0 auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding: 18px 0 28px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ── Botón dossier ── */
+.btn-captura {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 900;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border: 2px solid var(--blue);
+  background: var(--black);
+  color: var(--paper-2);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--blue);
+  transition: transform 0.18s ease, background-color 0.2s ease;
+}
+
+.btn-captura:hover {
+  background: var(--blue);
+  color: var(--white);
+  transform: translate(-2px, -2px);
+}
+
+.btn-captura:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* ── Reveal (animación de entrada) ── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 900px) {
+  .menu-toggle {
+    display: flex;
+  }
+
+  .elementos-navbar {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    margin: 0;
+    background: var(--black);
+    border-bottom: 3px solid var(--blue);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .navbar.is-open .elementos-navbar {
+    max-height: 360px;
+  }
+
+  .elementos-navbar li {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .elements {
+    display: block;
+    padding: 16px 24px;
+  }
+
+  .elements::after {
+    display: none;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 36px;
+  }
+
+  .hero-inner {
+    order: 2;
+  }
+
+  .hero-logo {
+    order: 1;
+    width: min(72%, 320px);
+  }
+
+  .hero-kicker,
+  .hero-cta {
+    justify-content: center;
+  }
+
+  .hero-cta {
+    display: inline-flex;
+  }
+
+  .hero-phrase {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .integrantes-grid {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .actividades-grid {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .musica-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .identidad-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --wrap: calc(100% - 32px);
+  }
+
+  .hero-line {
+    font-size: clamp(3.4rem, 20vw, 6rem);
+  }
+
+  .ig-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .ig-copy {
+    text-align: center;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .btn-captura span,
+  .btn-captura {
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Movimiento reducido ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+}
