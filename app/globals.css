@@ -836,6 +836,13 @@ strong {
   min-width: 100% !important;
 }
 
+.actividad-media--ig .actividad-plataforma {
+  z-index: 5;
+  top: 14px;
+  left: 14px;
+  pointer-events: none;
+}
+
 .actividad-play {
   position: absolute;
   inset: 0;
