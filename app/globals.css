@@ -819,20 +819,21 @@ strong {
   transform: scale(1.05);
 }
 
-/* Preview visual estático para Instagram (sin fabricar contenido) */
+/* Embed real de Instagram (publicación oficial vía embed.js) */
 .actividad-media--ig {
-  display: grid;
-  place-items: center;
-  background:
-    radial-gradient(circle at 70% 20%, rgba(43, 130, 199, 0.35), transparent 55%),
-    radial-gradient(circle at 20% 85%, rgba(13, 98, 157, 0.3), transparent 55%),
-    var(--black);
+  aspect-ratio: auto;
+  min-height: 420px;
+  overflow: hidden;
+  background: var(--black-2);
 }
 
-.actividad-media--ig .ig-preview-mark {
-  font-size: 3.4rem;
-  color: var(--blue);
-  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
+.actividad-media--ig .instagram-media {
+  background: var(--black-2) !important;
+  border: none !important;
+}
+
+.actividad-media--ig iframe {
+  min-width: 100% !important;
 }
 
 .actividad-play {
